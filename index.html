@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Letters</title>
 
   <style>
@@ -26,7 +25,7 @@
       font-family: Georgia, serif;
     }
 
-    .card {
+    .card, .view {
       width: 100%;
       max-width: 480px;
       background: rgba(255,255,255,0.92);
@@ -53,7 +52,8 @@
       outline: none;
     }
 
-    button {
+    button,
+    .btn {
       width: 100%;
       margin-top: 16px;
       padding: 16px;
@@ -64,9 +64,14 @@
       font-size: 1rem;
       cursor: pointer;
       transition: 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      font-family: inherit;
     }
 
-    button:hover {
+    button:hover,
+    .btn:hover {
       background: #1f2937;
     }
 
@@ -83,16 +88,11 @@
       display: none;
     }
 
-    .top {
-      margin-bottom: 16px;
-      text-align: center;
-      color: white;
-    }
-
-    .back-button {
-      max-width: 140px;
-      margin: 0 auto 20px auto;
-      display: block;
+    .message {
+      margin-top: 14px;
+      min-height: 22px;
+      font-size: 0.95rem;
+      color: #b91c1c;
     }
   </style>
 </head>
@@ -101,25 +101,21 @@
   <div id="loginCard" class="card">
     <h1>Enter Full Name</h1>
 
-    <input
-      type="text"
-      id="nameInput"
-      placeholder="Enter Full Name"
-    />
+    <input type="text" id="nameInput" placeholder="Enter Full Name" />
 
-    <button onclick="unlockDocument()">
-      Enter
-    </button>
+    <button onclick="unlockDocument()">Enter</button>
+
+    <div id="message" class="message"></div>
   </div>
 
-  <div id="documentView" class="hidden">
-    <div class="top">
-      <h1 id="personName"></h1>
-    </div>
+  <div id="documentView" class="hidden view">
+    <h1 id="personName"></h1>
 
-    <button class="back-button" onclick="goBack()">
-      Back
-    </button>
+    <button onclick="goBack()">Back</button>
+
+    <a id="openDocBtn" class="btn" href="#" target="_blank" rel="noopener noreferrer">
+      Open Document
+    </a>
 
     <iframe id="docFrame"></iframe>
   </div>
@@ -161,36 +157,43 @@
     };
 
     function normalize(text) {
-      return text
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, " ");
+      return text.toLowerCase().trim().replace(/\s+/g, " ");
     }
 
     function unlockDocument() {
       const input = document.getElementById("nameInput").value;
       const normalized = normalize(input);
-
       const documentUrl = DOCUMENTS[normalized];
+      const message = document.getElementById("message");
 
       if (!documentUrl) {
+        message.innerText = "Name not found.";
         return;
       }
 
+      message.innerText = "";
       document.getElementById("loginCard").classList.add("hidden");
       document.getElementById("documentView").classList.remove("hidden");
 
       document.getElementById("personName").innerText = input;
       document.getElementById("docFrame").src = documentUrl;
+      document.getElementById("openDocBtn").href = documentUrl;
     }
 
     function goBack() {
       document.getElementById("documentView").classList.add("hidden");
       document.getElementById("loginCard").classList.remove("hidden");
-
       document.getElementById("nameInput").value = "";
+      document.getElementById("message").innerText = "";
       document.getElementById("docFrame").src = "";
+      document.getElementById("openDocBtn").href = "#";
     }
+
+    document.getElementById("nameInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        unlockDocument();
+      }
+    });
   </script>
 
 </body>
