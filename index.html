@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Letters</title>
 
   <style>
@@ -18,14 +19,16 @@
       align-items: center;
       padding: 24px;
       background:
-        radial-gradient(circle at top,
-        rgba(255,247,237,0.14) 0%,
-        rgba(15,23,42,0.96) 40%,
-        rgba(2,6,23,1) 100%);
+        radial-gradient(
+          circle at top,
+          rgba(255,247,237,0.14) 0%,
+          rgba(15,23,42,0.96) 40%,
+          rgba(2,6,23,1) 100%
+        );
       font-family: Georgia, serif;
     }
 
-    .card, .view {
+    .card {
       width: 100%;
       max-width: 480px;
       background: rgba(255,255,255,0.92);
@@ -75,15 +78,6 @@
       background: #1f2937;
     }
 
-    iframe {
-      width: 100%;
-      height: 75vh;
-      border: none;
-      border-radius: 24px;
-      margin-top: 24px;
-      background: white;
-    }
-
     .hidden {
       display: none;
     }
@@ -98,102 +92,125 @@
 </head>
 <body>
 
+  <!-- LOGIN -->
   <div id="loginCard" class="card">
     <h1>Enter Full Name</h1>
 
-    <input type="text" id="nameInput" placeholder="Enter Full Name" />
+    <input
+      type="text"
+      id="nameInput"
+      placeholder="Enter Full Name"
+      autocomplete="off"
+    />
 
-    <button onclick="unlockDocument()">Enter</button>
+    <button onclick="unlockDocument()">
+      Enter
+    </button>
 
     <div id="message" class="message"></div>
   </div>
 
-  <div id="documentView" class="hidden view">
+  <!-- DOCUMENT PAGE -->
+  <div id="documentView" class="card hidden">
     <h1 id="personName"></h1>
 
-    <button onclick="goBack()">Back</button>
+    <button onclick="goBack()">
+      Back
+    </button>
 
-    <a id="openDocBtn" class="btn" href="#" target="_blank" rel="noopener noreferrer">
+    <a
+      id="openDocBtn"
+      class="btn"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       Open Document
     </a>
-
-    <iframe id="docFrame"></iframe>
   </div>
 
   <script>
     const DOCUMENTS = {
       "delmar yesaya junior cime tanihaha":
-        "https://docs.google.com/document/d/1FfvpHftdjnWNjWC9tQ1Z_1TW5Te-LaNrysVYCZHfzrM/preview",
+        "https://docs.google.com/document/d/1FfvpHftdjnWNjWC9tQ1Z_1TW5Te-LaNrysVYCZHfzrM/edit?usp=sharing",
 
       "theodore diago wijaya":
-        "https://docs.google.com/document/d/1vZfHoze0XC9iqur6deInjDAmoEwab4cIZ-zMZfkbHtw/preview",
+        "https://docs.google.com/document/d/1vZfHoze0XC9iqur6deInjDAmoEwab4cIZ-zMZfkbHtw/edit?usp=sharing",
 
       "nadya shakira febriani":
-        "https://docs.google.com/document/d/1IZ-eHQ4XieMJmVhf0D8TmOsGy69lM6eh1Zk91g3QO4g/preview",
+        "https://docs.google.com/document/d/1IZ-eHQ4XieMJmVhf0D8TmOsGy69lM6eh1Zk91g3QO4g/edit?usp=sharing",
 
       "miranda alvina trilaras":
-        "https://docs.google.com/document/d/1nEzWmaOjYo35FxhtRFa0SQcp65IBcUNXd3yh6xtdsAE/preview",
+        "https://docs.google.com/document/d/1nEzWmaOjYo35FxhtRFa0SQcp65IBcUNXd3yh6xtdsAE/edit?usp=sharing",
 
       "gerald austin limena":
-        "https://docs.google.com/document/d/1mmbbCkXOjdudrY0h7xXUs7ceoul_AgKCNJKfKvipSRY/preview",
+        "https://docs.google.com/document/d/1mmbbCkXOjdudrY0h7xXUs7ceoul_AgKCNJKfKvipSRY/edit?usp=sharing",
 
       "darren cristian jomi":
-        "https://docs.google.com/document/d/1Ubqg7xOxkLOH6UqcxrIcUxfjx_JbXS_COg2IsyuTSU4/preview",
+        "https://docs.google.com/document/d/1Ubqg7xOxkLOH6UqcxrIcUxfjx_JbXS_COg2IsyuTSU4/edit?usp=sharing",
 
       "joanna lee":
-        "https://docs.google.com/document/d/1UOzifL42SrQiTpG-X3scATqlNQwE95mZOFV1KP_7dWQ/preview",
+        "https://docs.google.com/document/d/1UOzifL42SrQiTpG-X3scATqlNQwE95mZOFV1KP_7dWQ/edit?usp=sharing",
 
       "jason nathaniel soesanto":
-        "https://docs.google.com/document/d/1wzK18rlvWmu7fNDKKlpQ9QD-PgZ9yB47ukraOZFVUqo/preview",
+        "https://docs.google.com/document/d/1wzK18rlvWmu7fNDKKlpQ9QD-PgZ9yB47ukraOZFVUqo/edit?usp=sharing",
 
       "geoffrey aaron bennet":
-        "https://docs.google.com/document/d/13klYq4oxIuWfcMKwl4HdqG5GPumZwJDCwyWbJl4T2bg/preview",
+        "https://docs.google.com/document/d/13klYq4oxIuWfcMKwl4HdqG5GPumZwJDCwyWbJl4T2bg/edit?usp=sharing",
 
       "andersen sidik djojowahono":
-        "https://docs.google.com/document/d/1JmFhADkibryoKPo7TMUd1iBo4vj0ggoS2Wrm0kjNLnU/preview",
+        "https://docs.google.com/document/d/1JmFhADkibryoKPo7TMUd1iBo4vj0ggoS2Wrm0kjNLnU/edit?usp=sharing",
 
       "poh priscilla eugene dharma saputra":
-        "https://docs.google.com/document/d/1OPiE2lpCJyPtreoeFsnzpMFYzIKahNhTzJcTIA1jvHQ/preview"
+        "https://docs.google.com/document/d/1OPiE2lpCJyPtreoeFsnzpMFYzIKahNhTzJcTIA1jvHQ/edit?usp=sharing"
     };
 
     function normalize(text) {
-      return text.toLowerCase().trim().replace(/\s+/g, " ");
+      return text
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, " ");
     }
 
     function unlockDocument() {
       const input = document.getElementById("nameInput").value;
       const normalized = normalize(input);
+
       const documentUrl = DOCUMENTS[normalized];
-      const message = document.getElementById("message");
 
       if (!documentUrl) {
-        message.innerText = "Name not found.";
+        document.getElementById("message").innerText =
+          "Name not found.";
         return;
       }
 
-      message.innerText = "";
+      document.getElementById("message").innerText = "";
+
       document.getElementById("loginCard").classList.add("hidden");
       document.getElementById("documentView").classList.remove("hidden");
 
       document.getElementById("personName").innerText = input;
-      document.getElementById("docFrame").src = documentUrl;
+
       document.getElementById("openDocBtn").href = documentUrl;
     }
 
     function goBack() {
       document.getElementById("documentView").classList.add("hidden");
       document.getElementById("loginCard").classList.remove("hidden");
+
       document.getElementById("nameInput").value = "";
       document.getElementById("message").innerText = "";
-      document.getElementById("docFrame").src = "";
+
       document.getElementById("openDocBtn").href = "#";
     }
 
-    document.getElementById("nameInput").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        unlockDocument();
-      }
-    });
+    document
+      .getElementById("nameInput")
+      .addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+          unlockDocument();
+        }
+      });
   </script>
 
 </body>
